@@ -1,6 +1,6 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
-
+const User = require('../models/user');
 exports.getProducts = (req, res, next) => {
     Product.find()
         .then(products => {
@@ -26,8 +26,10 @@ exports.getProduct = (req, res, next) => {
         .catch(err => console.log(err));
 }
 
-exports.getCart = (req, res, next) => {
-    req.user
+exports.getCart = async (req, res, next) => {
+
+    user = await User.findById({ _id: req.session.user._id })
+    user
         .populate('cart.items.productId')
         .execPopulate()
         .then(user => {
@@ -41,11 +43,13 @@ exports.getCart = (req, res, next) => {
         .catch(err => console.log(err));
 };
 
-exports.postCart = (req, res, next) => {
+exports.postCart = async (req, res, next) => {
     const prodId = req.body.productId;
     Product.findById(prodId)
-        .then(product => {
-            return req.user.addToCart(product);
+        .then(async product => {
+            user = await User.findById({ _id: req.session.user._id })
+
+            return user.addToCart(product);
         })
         .then(result => {
             res.redirect('/cart');

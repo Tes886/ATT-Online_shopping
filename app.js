@@ -28,7 +28,7 @@ const store = new MongoSessionStore({
 });
 const csrfProtection = csrf();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cookieParser());
@@ -58,6 +58,8 @@ app.use(errorController.get404);
 
 mongoose.connect('mongodb://localhost:27017/onlineshopping', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        app.listen(5000);
+        app.listen(5000, ()=>{
+            console.log("running on port 5000 ............")
+        });
     }).catch(err => console.error(err));
 
