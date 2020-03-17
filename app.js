@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoSessionStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
 
 const errorController = require('./controllers/error');
 // const mongoConnect = require('./util/database').mongoConnect;
@@ -16,6 +18,13 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
+app.post('/admin/add-product', upload.single('avatar'), function (req, res, next) {
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+  console.log(req.file);
+  res.end(req.file);
+});
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -33,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cookieParser());
 app.use(session({
-    name: 'Tina',
+    name: 'Tes',
     secret: 'my secret',
     resave: false,
     saveUninitialized: false,
