@@ -26,7 +26,7 @@ const authRoutes = require('./routes/auth');
 const errorRoutes = require('./routes/error');
 
 const store = new MongoSessionStore({
-    uri: 'mongodb://localhost:27017/onlineshopping',
+    uri: process.env.MongoURI,
     collection: 'mySessions'
 });
 
