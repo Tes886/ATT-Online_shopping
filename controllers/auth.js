@@ -27,7 +27,10 @@ exports.postLogin = (req, res, next) => {
                             req.session.isAuthenticated = true;
                             req.session.user = user;
                             return req.session.save(err => {
-                                res.redirect('/');
+                                if (req.session.user.role == "admin") {
+                                    res.redirect('/admin/products'); 
+                                }
+                                else {res.redirect('/');}
                             })
                         } else {
                             req.flash('loginErr', 'Invalid Username and Password!');
@@ -60,6 +63,7 @@ exports.getSignup = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
     const email = req.body.email;
+    const name = req.body.name;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
     const role = req.body.role;
@@ -72,6 +76,7 @@ exports.postSignup = (req, res, next) => {
                 .hash(password, 12)
                 .then(hashedPassword => {
                     const user = new User({
+                        name: name,
                         email: email,
                         password: hashedPassword,
                         cart: { items: [] },

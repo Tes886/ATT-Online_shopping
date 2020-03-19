@@ -7,24 +7,18 @@ const session = require('express-session');
 const MongoSessionStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 var multer  = require('multer')
+const dotenv = require('dotenv')
 var upload = multer({ dest: 'uploads/' })
+dotenv.config({path:'./config/config.env'})
 
 const errorController = require('./controllers/error');
-// const mongoConnect = require('./util/database').mongoConnect;
 const mongoose = require('mongoose');
-const csrf = require('csurf');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-app.post('/admin/add-product', upload.single('avatar'), function (req, res, next) {
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any
-  console.log(req.file);
-  res.end(req.file);
-});
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -35,7 +29,9 @@ const store = new MongoSessionStore({
     uri: 'mongodb://localhost:27017/onlineshopping',
     collection: 'mySessions'
 });
-const csrfProtection = csrf();
+
+//static file
+//app.use('/images',express.static(path.join(__dirname,'public','uploads')))
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -48,13 +44,12 @@ app.use(session({
     saveUninitialized: false,
     store: store
 }));
-//The order of csrf must be after bodyparser
-app.use(csrfProtection);
+
 app.use(flash());
 
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isAuthenticated;
-    res.locals.csrfToken = req.csrfToken();
+
     next();
 });
 
@@ -64,9 +59,10 @@ app.use(authRoutes);
 app.use(errorRoutes);
 
 app.use(errorController.get404);
-
-mongoose.connect('mongodb://localhost:27017/onlineshopping', { useNewUrlParser: true, useUnifiedTopology: true })
+const PORT = process.env.PORT || 3000
+mongoose.connect(process.env.MongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        app.listen(5000);
+        console.log('db connected ....');
+        app.listen(PORT);
     }).catch(err => console.error(err));
 

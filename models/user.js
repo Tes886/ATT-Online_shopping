@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    name:String,
+    date_added: {
+        "type": Date,
+        "default": Date.now
+    },
     email: {
         type: String,
         required: true
@@ -63,5 +68,22 @@ userSchema.methods.clearCart = function () {
     this.cart = { items: [] };
     return this.save();
 };
-
+userSchema.methods.deleteSingleItemFromCart = function (productId) {
+  
+  
+  
+    const updatedCartQuantity = this.cart.items.filter(item => {
+        if (item.productId.toString() == productId.toString()) {
+            if (item.quantity > 1) {
+                item.quantity = item.quantity - 1
+            } else {
+                return false;
+            }
+           
+        };
+        return item;
+    });
+    this.cart.items = updatedCartQuantity;
+    return this.save();
+}
 module.exports = mongoose.model('User', userSchema);

@@ -3,7 +3,7 @@
 </head>
 
 <body>
-    <%- include('../includes/navigation.ejs') %>
+    <%- include('../includes/navigation-user.ejs') %>
     <main>
         <% if (orders.length <= 0) { %>
         <h1>Nothing there!</h1>
@@ -11,10 +11,12 @@
         <ul class="orders">
             <% orders.forEach(order => { %>
             <li class="orders__item">
-                <h1>Order - # <%= order._id %></h1>
+                <h1>Order - # <%= order._id %><br>Date:<%= order.date_added %></h1>
+                
                 <ul class="orders__products">
                     <% order.products.forEach(p => { %>
-                    <li class="orders__products-item"><%= p.product.title %> (<%= p.quantity %>)</li>
+                        <li class="orders__products-item">Price: $ <%= p.product.price %><br> 
+                            Title: <%= p.product.title %><br> Quantity: <%= p.quantity %></li>
                     <% }); %>
                 </ul>
             </li>

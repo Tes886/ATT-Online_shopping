@@ -4,10 +4,14 @@
 </head>
 
 <body>
-    <%- include('../includes/navigation.ejs') %>
+    <%- include('../includes/navigation-admin.ejs') %>
 
     <main>
         <form class="login-form" action="/signup" method="POST">
+            <div class="form-control">
+                <label for="email">Name</label>
+                <input type="text" name="name" id="name">
+            </div>
             <div class="form-control">
                 <label for="email">E-Mail</label>
                 <input type="email" name="email" id="email">
@@ -24,7 +28,6 @@
                 <label for="role">Role</label>
                 <input type="text" name="role" id="role">
             </div>
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn" type="submit">Signup</button>
         </form>
     </main>

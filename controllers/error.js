@@ -7,7 +7,7 @@ exports.get404 = (req, res, next) => {
 
 exports.get403 = (req, res, next) => {
   res.status(403).render('403', {
-    pageTitle: 'Forbidden',
+    pageTitle: 'Not Allowe',
     path: ''
   });
 };
