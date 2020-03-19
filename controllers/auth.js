@@ -66,7 +66,7 @@ exports.postSignup = (req, res, next) => {
     const name = req.body.name;
     const password = req.body.password;
     const confirmPassword = req.body.confirmPassword;
-    const role = req.body.role;
+   
     User.findOne({ email: email })
         .then(userDoc => {
             if (userDoc) {
@@ -79,8 +79,8 @@ exports.postSignup = (req, res, next) => {
                         name: name,
                         email: email,
                         password: hashedPassword,
-                        cart: { items: [] },
-                        role: role
+                        cart: { items: [] }
+                       
                     });
                     return user.save();
                 })
