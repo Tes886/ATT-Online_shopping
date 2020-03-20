@@ -1,15 +1,19 @@
 const path = require('path');
-
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoSessionStore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
-var multer  = require('multer')
+var multer = require('multer')
 const dotenv = require('dotenv')
+const helmet = require('helmet');
+const compression = require('compression');
+
+const morgan = require('morgan');
 var upload = multer({ dest: 'uploads/' })
-dotenv.config({path:'./config/config.env'})
+dotenv.config({ path: './config/config.env' })
 
 const errorController = require('./controllers/error');
 const mongoose = require('mongoose');
@@ -36,6 +40,8 @@ const store = new MongoSessionStore({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(compression());
+app.use(helmet());
 app.use(cookieParser());
 app.use(session({
     name: 'Tes',
@@ -46,12 +52,16 @@ app.use(session({
 }));
 
 app.use(flash());
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isAuthenticated;
 
     next();
 });
+
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

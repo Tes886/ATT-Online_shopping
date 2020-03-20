@@ -3,27 +3,21 @@
 
 <body>
     <%- include('../includes/navigation-user.ejs') %>
+<div class="container" style="width: 80%; padding-left: 20%;">
+    <div>
+        <img src="data: image/*;base64,<%= product.imageUrl %>"  style="width: 60%;">
+        
+        <h1><%= product.title %></h1>
+        <p ><%= product.price %></p>
+        <p><%= product.description %></p>
+        
+        <div class="card__actions">
+            <%- include('../includes/add-to-cart.ejs', {product: product}) %>
 
-    <div class="grid ">
-        <article class="card product-item">
-            <header class="card__header">
-                <h1 class="product__title"><%= product.title %></h1>
-            </header>
-            <div class="card__image">
-                <img src="data: image/*;base64,<%= product.imageUrl %>">
-            </div>
-            <div class="card__content">
-                <h2 class="product__price"><%= product.price %></h2>
-                <p class="product__description"><%= product.description %></p>
-            </div>
-            <div class="card__actions">
-                <%- include('../includes/add-to-cart.ejs', {product: product}) %>
-
-            </div>
-        </article>
-
+        </div>
+      </div>
     </div>
+</body>
+</html>
 
 
-
-    <%- include('../includes/end.ejs') %>
